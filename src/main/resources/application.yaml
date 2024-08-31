@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: confcurring
+  config:
+    import:
+      - classpath:./concurrent.yaml
+      - optional:file:config/concurrent.yaml
