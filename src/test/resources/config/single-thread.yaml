@@ -1,0 +1,2 @@
+concurrent:
+  single-thread: true

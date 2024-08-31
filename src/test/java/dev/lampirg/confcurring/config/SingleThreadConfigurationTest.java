@@ -1,15 +1,18 @@
 package dev.lampirg.confcurring.config;
 
+import dev.lampirg.confcurring.factory.YamlPropertySourceFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(properties = "concurrent.single-thread=true")
+@SpringBootTest
+@TestPropertySource(value = "/config/single-thread.yaml", factory = YamlPropertySourceFactory.class)
 class SingleThreadConfigurationTest {
 
     @Autowired
@@ -25,9 +28,9 @@ class SingleThreadConfigurationTest {
 
     @Test
     void isSync() {
-        assertEquals(exportExecutor.getClass(), SyncTaskExecutor.class);
-        assertEquals(importExecutor.getClass(), SyncTaskExecutor.class);
-        assertEquals(qualifierlessTaskExecutor.getClass(), SyncTaskExecutor.class);
+        assertEquals(SyncTaskExecutor.class, exportExecutor.getClass());
+        assertEquals(SyncTaskExecutor.class, importExecutor.getClass());
+        assertEquals(SyncTaskExecutor.class, qualifierlessTaskExecutor.getClass());
     }
 
     @Test
