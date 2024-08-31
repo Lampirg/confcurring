@@ -21,18 +21,18 @@ class SingleThreadConfigurationTest {
     private TaskExecutor importExecutor;
 
     @Autowired
-    private TaskExecutor someTaskExecutorWithNameThatNeverWillBeQualifier;
+    private TaskExecutor qualifierlessTaskExecutor;
 
     @Test
     void isSync() {
         assertEquals(exportExecutor.getClass(), SyncTaskExecutor.class);
         assertEquals(importExecutor.getClass(), SyncTaskExecutor.class);
-        assertEquals(someTaskExecutorWithNameThatNeverWillBeQualifier.getClass(), SyncTaskExecutor.class);
+        assertEquals(qualifierlessTaskExecutor.getClass(), SyncTaskExecutor.class);
     }
 
     @Test
     void isSame() {
         assertSame(exportExecutor, importExecutor);
-        assertSame(someTaskExecutorWithNameThatNeverWillBeQualifier, exportExecutor);
+        assertSame(qualifierlessTaskExecutor, exportExecutor);
     }
 }
