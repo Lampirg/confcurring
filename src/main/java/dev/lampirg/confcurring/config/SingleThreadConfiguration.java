@@ -10,7 +10,7 @@ import org.springframework.core.task.TaskExecutor;
 @ConditionalOnProperty(value = "concurrent.single-thread")
 public class SingleThreadConfiguration {
 
-    @Bean
+    @Bean({"syncTaskExecutor", "importExecutor", "exportExecutor"})
     public TaskExecutor syncTaskExecutor() {
         return new SyncTaskExecutor();
     }
