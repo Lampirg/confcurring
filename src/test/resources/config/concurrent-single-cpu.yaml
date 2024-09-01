@@ -1,0 +1,13 @@
+concurrent:
+  single-thread: false
+  import-pool:
+    pool-mode: SINGLE
+    unit-mode: CPU
+    number-of-threads: 70
+  export-pool:
+    pool-mode: SINGLE
+    unit-mode: CPU
+    number-of-threads: 30
+  shared-pool:
+    unit-mode: THREAD
+    number-of-threads: 0
