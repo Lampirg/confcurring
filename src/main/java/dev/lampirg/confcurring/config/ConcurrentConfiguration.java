@@ -3,6 +3,7 @@ package dev.lampirg.confcurring.config;
 import dev.lampirg.confcurring.confprop.ConcurrentProperties;
 import dev.lampirg.confcurring.confprop.PoolMode;
 import dev.lampirg.confcurring.confprop.PoolProperties;
+import dev.lampirg.confcurring.inner.OperationSystemInformationSystem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,13 +23,14 @@ public class ConcurrentConfiguration {
 
 
     private final ConcurrentProperties concurrentProperties;
+    private final OperationSystemInformationSystem informationSystem;
 
 
     @Bean
     @ConditionalOnExpression("${concurrent.shared-pool.number-of-threads} > 0")
     public TaskExecutor sharedExecutor() {
         PoolProperties sharedPool = concurrentProperties.getSharedPool();
-        return createTaskExecutor(sharedPool.getNumberOfThreads());
+        return createTaskExecutor(sharedPool);
     }
 
     @Bean
@@ -39,7 +41,7 @@ public class ConcurrentConfiguration {
         }
         return sharedExecutor
                 .filter(te -> exportPool.getPoolMode() == PoolMode.SHARED)
-                .orElseGet(() -> createTaskExecutor(exportPool.getNumberOfThreads()));
+                .orElseGet(() -> createTaskExecutor(exportPool));
     }
 
     @Bean
@@ -50,11 +52,15 @@ public class ConcurrentConfiguration {
         }
         return sharedExecutor
                 .filter(te -> importPool.getPoolMode() == PoolMode.SHARED)
-                .orElseGet(() -> createTaskExecutor(importPool.getNumberOfThreads()));
+                .orElseGet(() -> createTaskExecutor(importPool));
     }
 
-    private TaskExecutor createTaskExecutor(int numberOfThreads) {
+    private TaskExecutor createTaskExecutor(PoolProperties poolProperties) {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+        int numberOfThreads = switch (poolProperties.getUnitMode()) {
+            case THREAD -> poolProperties.getNumberOfThreads();
+            case CPU -> informationSystem.availableProcessors() * poolProperties.getNumberOfThreads() / 100;
+        };
         threadPoolTaskExecutor.setMaxPoolSize(numberOfThreads);
         threadPoolTaskExecutor.setQueueCapacity(0);
         return threadPoolTaskExecutor;
