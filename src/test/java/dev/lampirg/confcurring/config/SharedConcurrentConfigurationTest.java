@@ -27,12 +27,11 @@ class SharedConcurrentConfigurationTest {
     @Autowired
     @Qualifier("sharedExecutor")
     private TaskExecutor sharedExecutor;
-
     @Autowired
     private ApplicationContext applicationContext;
 
     @Test
-    void isThreadPooled() {
+    void correctType() {
         assertEquals(ThreadPoolTaskExecutor.class, exportExecutor.getClass());
         assertEquals(ThreadPoolTaskExecutor.class, importExecutor.getClass());
         assertEquals(ThreadPoolTaskExecutor.class, sharedExecutor.getClass());
@@ -50,7 +49,7 @@ class SharedConcurrentConfigurationTest {
     }
 
     @Test
-    void sizeIsTen() {
+    void correctSize() {
         assertEquals(10, ((ThreadPoolTaskExecutor) exportExecutor).getMaxPoolSize());
     }
 }
