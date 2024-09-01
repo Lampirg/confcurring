@@ -24,23 +24,33 @@ class SharedConcurrentConfigurationTest {
     @Autowired
     @Qualifier("importExecutor")
     private TaskExecutor importExecutor;
+    @Autowired
+    @Qualifier("sharedExecutor")
+    private TaskExecutor sharedExecutor;
 
     @Autowired
     private ApplicationContext applicationContext;
 
     @Test
     void isThreadPooled() {
-        assertEquals(exportExecutor.getClass(), ThreadPoolTaskExecutor.class);
-        assertEquals(importExecutor.getClass(), ThreadPoolTaskExecutor.class);
+        assertEquals(ThreadPoolTaskExecutor.class, exportExecutor.getClass());
+        assertEquals(ThreadPoolTaskExecutor.class, importExecutor.getClass());
+        assertEquals(ThreadPoolTaskExecutor.class, sharedExecutor.getClass());
     }
 
     @Test
-    void isNotSame() {
-        assertNotSame(exportExecutor, importExecutor);
+    void isSame() {
+        assertSame(exportExecutor, importExecutor);
+        assertSame(sharedExecutor, importExecutor);
     }
 
     @Test
     void noDefault() {
         assertThrows(NoUniqueBeanDefinitionException.class, () -> applicationContext.getBean(TaskExecutor.class));
+    }
+
+    @Test
+    void sizeIsTen() {
+        assertEquals(10, ((ThreadPoolTaskExecutor) exportExecutor).getMaxPoolSize());
     }
 }
