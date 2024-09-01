@@ -1,4 +1,4 @@
-package dev.lampirg.confcurring.config;
+package dev.lampirg.confcurring.config.concurrent;
 
 import dev.lampirg.confcurring.factory.YamlPropertySourceFactory;
 import org.junit.jupiter.api.Test;
