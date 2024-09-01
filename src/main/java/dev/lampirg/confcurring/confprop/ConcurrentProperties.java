@@ -10,4 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ConcurrentProperties {
 
     private boolean isSingleThread;
+    private PoolProperties importPool;
+    private PoolProperties exportPool;
+    private PoolProperties sharedPool;
+
 }

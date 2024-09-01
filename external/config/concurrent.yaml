@@ -1,2 +1,11 @@
 concurrent:
   single-thread: true
+  import-pool:
+    pool-mode: SHARED
+    unit-mode: THREAD
+  export-pool:
+    pool-mode: SHARED
+    unit-mode: THREAD
+  shared-pool:
+    unit-mode: THREAD
+    number-of-threads: 5
